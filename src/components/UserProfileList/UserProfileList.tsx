@@ -77,9 +77,6 @@ const UserProfileList: React.FC = () => {
     return (
         <div className="container mx-auto p-5 mt-8">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold">User Profiles</h2>
-            </div>
-            <div className="flex justify-between items-center mb-4">
                 <input
                     type="text"
                     placeholder="Search profiles..."
