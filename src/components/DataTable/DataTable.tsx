@@ -1,87 +1,67 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { DataItem } from '../../interfaces/dataTable';
+// src/components/DataTable/DataTable.tsx
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { generateDataItems } from '../../utils/generateDataItems';
 import { calcTotal } from '../../utils/helpers';
+import Table from './Table';
 import Pagination from '../Pagination/Pagination';
+import SearchBox from '../Searchbox/Searchbox';
+import { DataItem } from '../../interfaces/dataTable';
+import { debounce } from '../../utils/debounce';
 
 const DataTable: React.FC = () => {
-  const [count, setCount] = useState(10000); // Start with some initial data count
+  const [count, setCount] = useState(1000000);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Generate data items based on the count
   const dataItems = useMemo(() => generateDataItems(count), [count]);
 
-  // Process items based on search term
   const processedItems = useMemo(() => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return dataItems.reduce<DataItem[]>((acc, item) => {
-      if (item.value.toLowerCase().includes(searchTerm.toLowerCase())) {
-        const newItem = { ...item, number: item.number * 2 };
-        return [...acc, newItem];
+      if (item.value.toLowerCase().includes(lowerCaseSearchTerm)) {
+        acc.push({ ...item, number: item.number * 2 });
       }
       return acc;
     }, []);
   }, [dataItems, searchTerm]);
 
-  // Calculate total value of processed items
   const total = useMemo(() => calcTotal(processedItems), [processedItems]);
 
-  // Pagination logic
-  const pageCount = Math.ceil(processedItems.length / itemsPerPage);
+  const pageCount = useMemo(() => Math.ceil(processedItems.length / itemsPerPage), [processedItems, itemsPerPage]);
   const paginatedItems = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     return processedItems.slice(startIndex, startIndex + itemsPerPage);
   }, [processedItems, currentPage, itemsPerPage]);
 
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const debouncedSearch = useCallback(debounce((value: string) => {
+    setSearchTerm(value);
+  }, 120), []);
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.target.value);
+  };
+  const clearSearch = () => {
+    setSearchTerm("");
+    setCurrentPage(1);
   };
 
   useEffect(() => {
-    setCurrentPage(1); // Reset to the first page when searchTerm changes
+    setCurrentPage(1);
   }, [searchTerm]);
 
   return (
     <div className="container mx-auto p-5 mt-8">
       <div className="overflow-x-auto">
-        <input
-          type="text"
-          placeholder="Filter items..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-4 py-2 border rounded shadow mb-4"
+        <SearchBox
+          searchTerm={searchTerm}
+          handleSearch={handleSearch}
+          clearSearch={clearSearch}
         />
 
-        <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-800 text-gray-100 font-normal text-md">
-              <th className="py-2 px-4 border-b">Id</th>
-              <th className="py-2 px-4 border-b">Value</th>
-              <th className="py-2 px-4 border-b">Number</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600 text-sm font-light">
-            {paginatedItems.map((item, index) => (
-              <tr key={item.id} className={`border-b border-gray-200 hover:bg-gray-100 ${index % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                <td className="py-2 px-4 text-left whitespace-nowrap">{item.id}</td>
-                <td className="py-2 px-4 text-left">{item.value}</td>
-                <td className="py-2 px-4 text-left">{item.number}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="bg-gray-800 text-gray-100 font-normal text-md">
-              <td className="py-2 px-4 text-left">Total:</td>
-              <td className="py-2 px-4 text-left">{total}</td>
-              <td className="py-2 px-4 text-left"></td>
-            </tr>
-          </tfoot>
-        </table>
+        <Table items={paginatedItems} total={total} />
 
         <div className="flex justify-between items-center mt-4">
-           <Pagination
+          <Pagination 
             totalPages={pageCount}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
@@ -93,5 +73,3 @@ const DataTable: React.FC = () => {
 };
 
 export default DataTable;
-
- 

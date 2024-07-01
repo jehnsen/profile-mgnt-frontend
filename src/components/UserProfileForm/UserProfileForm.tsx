@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IUserProfile, ModalFormProps } from "../../interfaces/userProfile";
 import { useCreateProfileMutation, useUpdateProfileMutation } from "../../api/apiService";
 import SuccessMessage from '../ui/Success';
+import { validateInput } from '../../utils/helpers';
 
 const ModalForm: React.FC<ModalFormProps> = ({ isOpen, onClose, profileToEdit }) => {
   const initialProfileState: IUserProfile = {
@@ -29,16 +30,7 @@ const ModalForm: React.FC<ModalFormProps> = ({ isOpen, onClose, profileToEdit })
     }
   }, [profileToEdit]);
 
-  const validate = (): boolean => {
-    const newErrors: { [key: string]: string } = {};
-    if (!profile.name) newErrors.name = "Name is required";
-    if (!profile.email) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(profile.email)) newErrors.email = "Email is invalid";
-    if (!profile.age) newErrors.age = "Age is required";
-    else if (profile.age <= 0) newErrors.age = "Age must be greater than 0";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -67,7 +59,7 @@ const ModalForm: React.FC<ModalFormProps> = ({ isOpen, onClose, profileToEdit })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validateInput(profile, setErrors)) return;
 
     setSubmitting(true);
     try {
@@ -118,7 +110,7 @@ const ModalForm: React.FC<ModalFormProps> = ({ isOpen, onClose, profileToEdit })
               className={`mt-1 p-2 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={profile.name}
               onChange={handleChange}
-              required
+              // required
             />
             {errors.name && <div className="text-red-500">{errors.name}</div>}
           </div>
@@ -142,7 +134,7 @@ const ModalForm: React.FC<ModalFormProps> = ({ isOpen, onClose, profileToEdit })
               className={`mt-1 p-2 border ${errors.age ? 'border-red-500' : 'border-gray-300'} rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={profile.age}
               onChange={handleChange}
-              required
+              // required
             />
             {errors.age && <div className="text-red-500">{errors.age}</div>}
           </div>

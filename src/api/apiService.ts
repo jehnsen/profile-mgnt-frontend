@@ -2,9 +2,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUserProfile } from '../interfaces/userProfile';
 
+const baseUrl = process.env.REACT_APP_BASE_URL;
+const basePath = process.env.REACT_APP_BASE_PATH;
+
+const apiUrl = `${baseUrl}${basePath}`;
+
 export const api = createApi({
     reducerPath: 'api',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api/v1' }),
+    baseQuery: fetchBaseQuery({ baseUrl: apiUrl }),
     endpoints: (builder) => ({
         getAllProfiles: builder.query<IUserProfile[], void>({
             query: () => 'users',
@@ -18,7 +23,7 @@ export const api = createApi({
                 method: 'POST',
                 body: profile,
             }),
-            // Optimistically update the cache after mutation
+            // update the cache after mutation
             async onQueryStarted(profile, { dispatch, queryFulfilled }) {
                 try {
                     const { data: createdProfile } = await queryFulfilled;
