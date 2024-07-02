@@ -1,31 +1,15 @@
-# Getting Started with Create React App
+--------------------------------
+## How to setup
+--------------------------------
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## for local setup
+1. Install the required dependencies. (`Yarn` is the recommended package manager, but you can use `npm`, just delete first the `package.lock.json`)
+    ex. `yarn install`
+2. Run the app `npm start`
+3. Go to `http://localhost:3000/`
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## production: 
+1. You can access the production build here: `https://profile-mgnt-frontend.vercel.app/`
 
 
 --------------------------------
@@ -69,22 +53,24 @@ To improve this function, we should refactor it to avoid using an IIFE and ensur
     - Memoizing `handleSearch` ensures that the function identity remains stable, preventing unnecessary re-renders of components that depend on this handler.
     - Memoizing `handlePageChange` ensures that the function identity remains stable, preventing unnecessary re-renders of components that depend on this handler.
 
-4. Implement Suspense and React.lazy:
+4. Implement `Suspense` and `React.lazy`:
     - By splitting the code into smaller chunks, the initial load time of the application will be reduced. This is especially beneficial for larger applications with many routes and components. It will only load what is necessary at any given time, reducing the amount of JavaScript that needs to be parsed and executed on initial load and we can also display a spinner animation while components are loading.
-5. Used RTK Query for data fetching instead of axios because it has built-in caching, 
+5. Used `RTK Query` for data fetching instead of axios because it has built-in caching, 
     automatic re-fetching, reduced boilerplate and enhance type safety with generated hooks for API endpoints
 
 --------------------------------
 ## Identifying Other Issues 
 --------------------------------
 
-2. Use useMemo to memoize the filtered and processed data to improve performance by avoiding unnecessary recalculations on every render
-3. Use CSS utility libraries like TailwindCSS to enhance the UI and ensure responsiveness across different platforms. TailwindCSS offers a range of pre-defined classes that streamline styling and layout adjustments, making it easier to create a consistent, responsive design without writing custom CSS for each element. This approach not only speeds up development but also maintains a clean and maintainable codebase.
-4. To keep the project organized and maintainable, place the TypeScript interfaces in a dedicated folder. This centralizes the type definitions, making them easier to manage and reuse across different parts of the application. This approach enhances code readability and consistency, ensuring that type definitions are easily accessible and modifiable as the project evolves.
+1. Use useMemo to memoize the filtered and processed data to improve performance by avoiding unnecessary recalculations on every render
+2. Use CSS utility libraries like TailwindCSS to enhance the UI and ensure responsiveness across different platforms. TailwindCSS offers a range of pre-defined classes that streamline styling and layout adjustments, making it easier to create a consistent, responsive design without writing custom CSS for each element. This approach not only speeds up development but also maintains a clean and maintainable codebase.
+3. To keep the project organized and maintainable, place the TypeScript interfaces in a dedicated folder. This centralizes the type definitions, making them easier to manage and reuse across different parts of the application. This approach enhances code readability and consistency, ensuring that type definitions are easily accessible and modifiable as the project evolves.
 
 **For Future Improvement**
 - Set up a continuous integration and deployment pipeline to automate deployment, ensuring consistent code quality and quicker release cycles.
 - Create a docker setup and deploy in docker container
+- Create unit test for each components
+- Add Login Functionality and Authorization handling
 
 ### Optional Enhancements
 1. Added CRUD functionality for user profiles.
@@ -97,3 +83,5 @@ To improve this function, we should refactor it to avoid using an IIFE and ensur
 7. Added Searchbox and Pagination components that can be shared by diffrent components
 8. Added an animated success message after adding/updating user
 
+
+* * Due to time constraints during the exam, I was unable to implement the `Login` functionality `(Authentication & Authorization)` in the application. While these features are crucial for securing access and managing user permissions, they were omitted to focus on other aspects of the application within the limited time available. :-)
