@@ -63,7 +63,9 @@ const UserProfileList: React.FC = () => {
     if (isLoading) return <LoadingSpinner />;
     if (error) {
         const errorMessage = 'status' in error ? `Error: ${error.status}` : error.message;
-        return <div>{errorMessage}</div>;
+        return <>
+            <LoadingSpinner />
+        </>
     }
     
     return (

@@ -6,8 +6,6 @@ interface TagProps {
   key?: number;
 }
 
-
-
 const Tag: React.FC<TagProps> = ({ tag }) => {
   const colorClass = tagColorClasses[tag.toLowerCase()] || tagColorClasses['others'];
 
